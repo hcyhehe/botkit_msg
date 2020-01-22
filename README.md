@@ -1,5 +1,4 @@
-# eggIM
-
+# botkit_msg
 
 
 ## QuickStart
