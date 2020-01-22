@@ -1,0 +1,40 @@
+p {
+    margin: 0;
+}
+
+ul {
+    padding-left: 0;
+}
+
+label {
+    display: block;
+}
+input, button {
+    width: 90%;
+    outline: none;
+    padding: 5px 8px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #2c6fee;
+}
+button {
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    border-color: #ccc;
+    background-color: #eee;
+}
+button.active,
+button:hover {
+    color: #fff;
+    border-color: #2c6fee;
+    background-color: #3471e0;
+}
+
+form {
+    width: 30%;
+    margin: 0 auto;
+    text-align: center;
+}
+
