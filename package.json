@@ -25,7 +25,11 @@
     "safe-buffer": "^5.2.0"
   },
   "dependencies": {
+    "botbuilder-adapter-web": "^1.0.5",
+    "botbuilder-storage-mongodb": "^0.9.5",
+    "botkit": "^4.6.1",
     "egg": "^2.26.0",
-    "egg-view-nunjucks": "^2.2.0"
+    "egg-view-nunjucks": "^2.2.0",
+    "lowdb": "^1.0.0"
   }
 }
