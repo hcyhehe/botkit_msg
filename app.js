@@ -9,6 +9,21 @@ const controller = new Botkit({
   adapter,
   // ...other options
 })
+const app = require('express')()
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
+
+io.on('connection', function(socket){
+  console.log('socket.io connected')
+  socket.on('msg',function (data) {
+    console.log(data)
+    socket.emit('msg', data)//对用户自己的
+    //socket.broadcast.emit('showMsg', {userSay,userName})//广播的
+  })
+})
+http.listen(3333, function(){
+  console.log('socket.io listening on *:3333')
+})
 
 
 class AppBootHook {

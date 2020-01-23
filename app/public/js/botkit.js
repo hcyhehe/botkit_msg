@@ -2,6 +2,18 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
+var socketIO = io('http://localhost:3333')
+socketIO.on('connect', function(){
+    console.log('botkit.js socket.io connected!')
+    socketIO.emit('msg', {text: 'from botkit.js'})
+})
+socketIO.on('event', function(data){
+    console.log('botkit.js receive msg', data)
+})
+socketIO.on('disconnect', function(){
+    console.log('botkit.js socket.io disconnected!')
+})
+
 
 var converter = new showdown.Converter();
 converter.setOption('openLinksInNewWindow', true);

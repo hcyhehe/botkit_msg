@@ -18,3 +18,4 @@ exports.cors = {
 exports.middleware = [
     'httpProxy'
 ];
+

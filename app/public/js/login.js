@@ -1,3 +1,15 @@
+var socketIO = io('http://localhost:3333')
+socketIO.on('connect', function(){
+    console.log('login.js socket.io connected!')
+})
+socketIO.on('msg', function(data){
+    console.log('login.js receive msg', data)
+})
+socketIO.on('disconnect', function(){
+    console.log('login.js socket.io disconnected!')
+})
+
+
 const BASE_WEBSOCKET_URL = 'wss://dev.fsll.tech:8443/websocket/';
 
 // strophe连接xmpp服务器句柄 操作xml数据使用.
@@ -120,7 +132,7 @@ function onConnect(status, connection) {
             });
 
             // 用户列表点击(聊天).
-            $('.chat .user-list').delegate('li', 'click', function () {
+            $('.chat .user-list').delegate('li', 'click', function (){
                 chatType = 'single';
 
                 // 单聊 只能选择一个联系人.
