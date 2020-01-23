@@ -36,9 +36,6 @@ var Botkit = {
     current_user: null,
     on: function (event, handler) {
         console.log('Botkit on')
-        // this.message_window.addEventListener(event, function (evt) {
-        //     handler(evt.detail);
-        // });
     },
     trigger: function (event, details) {
         var event = new CustomEvent(event, {
@@ -99,7 +96,6 @@ var Botkit = {
             user: this.guid,
             channel: this.options.use_sockets ? 'websocket' : 'webhook'
         });
-
         //this.input.value = '';
 
         this.trigger('sent', message);
@@ -145,19 +141,16 @@ var Botkit = {
         var that = this;
         if (user && user.id) {
             Botkit.setCookie('botkit_guid', user.id, 1);
-
             user.timezone_offset = new Date().getTimezoneOffset();
             that.current_user = user;
             console.log('CONNECT WITH USER', user);
         }
-
         // connect to the chat server!
         if (that.options.use_sockets) {
             that.connectWebsocket(that.config.ws_url);
         } else {
             that.connectWebhook();
         }
-
     },
     connectWebhook: function () {
         var that = this;
@@ -233,14 +226,14 @@ var Botkit = {
 
         // Listen for messages 这里监听服务端接收数据
         that.socket.addEventListener('message', function (event) {
-            console.log('socket addEventListener', event)
             var message = null;
             try {
-                message = JSON.parse(event.data);
+                message = JSON.parse(event.data)
             } catch (err) {
                 that.trigger('socket_error', err);
                 return;
             }
+            console.log('socket addEventListener', message)
             that.trigger(message.type, message);
         });
     },
@@ -255,21 +248,6 @@ var Botkit = {
     },
     renderMessage: function (message) {
         console.log('renderMessage', message)
-        // var that = this;
-        // if (!that.next_line) {
-        //     that.next_line = document.createElement('div');
-        //     that.message_list.appendChild(that.next_line);
-        // }
-        // if (message.text) {
-        //     message.html = converter.makeHtml(message.text);
-        // }
-
-        // that.next_line.innerHTML = that.message_template({
-        //     message: message
-        // });
-        // if (!message.isTyping) {
-        //     delete (that.next_line);
-        // }
     },
     triggerScript: function (script, thread) {
         this.deliverMessage({
@@ -299,17 +277,14 @@ var Botkit = {
     receiveCommand: function (event) {
         switch (event.data.name) {
             case 'trigger':
-                // tell Botkit to trigger a specific script/thread
                 console.log('TRIGGER', event.data.script, event.data.thread);
                 Botkit.triggerScript(event.data.script, event.data.thread);
                 break;
             case 'identify':
-                // link this account info to this user
                 console.log('IDENTIFY', event.data.user);
                 Botkit.identifyUser(event.data.user);
                 break;
             case 'connect':
-                // link this account info to this user
                 Botkit.connect(event.data.user);
                 break;
             default:
@@ -354,19 +329,7 @@ var Botkit = {
     boot: function (user) {
         console.log('Booting up');
         var that = this;
-        // that.message_window = document.getElementById("message_window");
-        // that.message_list = document.getElementById("message_list");
-
-        // var source = document.getElementById('message_template').innerHTML;
-        // that.message_template = Handlebars.compile(source);
-
-        // that.replies = document.getElementById('message_replies');
-        // that.input = document.getElementById('messenger_input');
-
-        // that.focus();
         that.on('connected', function () {
-            // that.message_window.className = 'connected';
-            // that.input.disabled = false;
             that.sendEvent({
                 name: 'connected'
             });
@@ -405,7 +368,6 @@ var Botkit = {
             }
         });
 
-
         that.on('message', function (message) {
             console.log('222222222')
             that.clearReplies();
@@ -429,13 +391,6 @@ var Botkit = {
                 }
 
                 that.replies.appendChild(list);
-                // uncomment this code if you want your quick replies to scroll horizontally instead of stacking
-                // var width = 0;
-                // // resize this element so it will scroll horizontally
-                // for (var e = 0; e < elements.length; e++) {
-                //     width = width + elements[e].offsetWidth + 18;
-                // }
-                // list.style.width = width + 'px';
                 if (message.disable_input) {
                     that.input.disabled = true;
                 } else {
@@ -457,11 +412,7 @@ var Botkit = {
             }
         });
 
-
         if (window.self !== window.top) {
-            // this is embedded in an iframe.
-            // send a message to the master frame to tell it that the chat client is ready
-            // do NOT automatically connect... rather wait for the connect command.
             that.parent_window = window.parent;
             window.addEventListener("message", that.receiveCommand, false);
             that.sendEvent({
@@ -471,7 +422,6 @@ var Botkit = {
             console.log('Messenger booted in embedded mode');
         } else {
             console.log('Messenger booted in stand-alone mode');
-            // this is a stand-alone client. connect immediately.
             that.connect(user);
         }
 
@@ -481,7 +431,5 @@ var Botkit = {
 
 
 (function (){
-    // your page initialization code here
-    // the DOM will be available here
     Botkit.boot()
 })()

@@ -385,7 +385,7 @@ function onConnect(status, connection) {
 
                 if (message.startsWith('[obj')) {
                     res = getMediaContent(message.replace(/&quot;/g, '"'));
-                }else {
+                } else {
                     res = message;
                 }
 
