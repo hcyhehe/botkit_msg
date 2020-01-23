@@ -23,7 +23,5 @@
         </div>
         <button class="send">发送</button>
     </div>
-
-    <script src="/public/js/chat.js"></script>
 </body>
 </html>

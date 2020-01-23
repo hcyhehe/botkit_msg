@@ -109,8 +109,8 @@ function onConnect(status, connection) {
                 // 清空聊天输入框.
                 $('.chat .send-chat').empty();
 
-                // 追加最新消息.
-                if (chatType === 'single') {
+                // 追加最新消息.（发送方）
+                if (chatType === 'single'){
                     $('.show-msg').append(`<div class="show-msg-item">
                                                 <p>${content}</p>
                                             </div>`);
@@ -389,7 +389,8 @@ function onConnect(status, connection) {
                     res = message;
                 }
 
-                // 追加对方发送的消息.
+                // 追加对方发送的消息.（接收方）
+                console.log('22222222:'+res)
                 $('.show-msg').append(`<div class="show-msg-item member">
                                             <p>${res}</p>
                                         </div>`);
