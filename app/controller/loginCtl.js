@@ -25,7 +25,7 @@ class LoginController extends Controller {
         // 获取接口配置数据.
         let xmppSetData = await this.ctx.curl('https://dev.fsll.tech:8443/startalk_nav');
         xmppSetData = JSON.parse(xmppSetData.data.toString());
-        console.log(xmppSetData);
+        //console.log(xmppSetData);
 
         // 获取fullkey.
         let FULLKEY = await this.ctx.curl(`${xmppSetData.baseaddess.javaurl}/qtapi/nck/rsa/get_public_key.do`);

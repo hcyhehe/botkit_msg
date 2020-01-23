@@ -15,10 +15,15 @@ const io = require('socket.io')(http)
 
 io.on('connection', function(socket){
   console.log('socket.io connected')
-  socket.on('msg',function (data) {
-    console.log(data)
-    socket.emit('msg', data)//对用户自己的
-    //socket.broadcast.emit('showMsg', {userSay,userName})//广播的
+  socket.on('loginToServer', function(data) {
+    console.log('loginToServer', data)
+    socket.broadcast.emit('serverToBotkit', data)
+    //socket.emit('xxx', 'abc')  //单播
+  })
+
+  socket.on('botkitToServer', function(data){
+    console.log('botkitToServer', data)
+    socket.broadcast.emit('serverToLogin', data)
   })
 })
 http.listen(3333, function(){

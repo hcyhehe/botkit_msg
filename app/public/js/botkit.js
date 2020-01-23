@@ -5,10 +5,10 @@
 var socketIO = io('http://localhost:3333')
 socketIO.on('connect', function(){
     console.log('botkit.js socket.io connected!')
-    socketIO.emit('msg', {text: 'from botkit.js'})
 })
-socketIO.on('event', function(data){
-    console.log('botkit.js receive msg', data)
+socketIO.on('serverToBotkit', function(data){
+    console.log('receive serverToBotkit', data)
+    Botkit.send(data)  //发送开局快捷语言
 })
 socketIO.on('disconnect', function(){
     console.log('botkit.js socket.io disconnected!')
@@ -216,7 +216,7 @@ var Botkit = {
                 channel: 'socket',
                 user_profile: that.current_user ? that.current_user : null,
             });
-            Botkit.send('菜单')  //发送开局快捷语言
+            //Botkit.send('菜单')  //发送开局快捷语言
         });
 
         that.socket.addEventListener('error', function (event) {
@@ -247,6 +247,7 @@ var Botkit = {
             }
             console.log('socket addEventListener', message)
             that.trigger(message.type, message);
+            socketIO.emit('botkitToServer', message) //机器人回馈的消息，发送至socket.IO服务端
         });
     },
     clearReplies: function () {

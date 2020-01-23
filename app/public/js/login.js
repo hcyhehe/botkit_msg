@@ -2,8 +2,10 @@ var socketIO = io('http://localhost:3333')
 socketIO.on('connect', function(){
     console.log('login.js socket.io connected!')
 })
-socketIO.on('msg', function(data){
-    console.log('login.js receive msg', data)
+socketIO.on('serverToLogin', function(data){
+    $('.show-msg').append(`<div class="show-msg-item member">
+                                <p>${data.text}</p>
+                            </div>`);
 })
 socketIO.on('disconnect', function(){
     console.log('login.js socket.io disconnected!')
@@ -402,7 +404,7 @@ function onConnect(status, connection) {
                 }
 
                 // 追加对方发送的消息.（接收方）
-                console.log('22222222:'+res)
+                socketIO.emit('loginToServer', res)
                 $('.show-msg').append(`<div class="show-msg-item member">
                                             <p>${res}</p>
                                         </div>`);
