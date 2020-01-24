@@ -17,13 +17,14 @@ io.on('connection', function(socket){
   console.log('socket.io connected')
   socket.on('loginToServer', function(data) {
     console.log('loginToServer', data)
-    socket.broadcast.emit('serverToBotkit', data)
-    //socket.emit('xxx', 'abc')  //单播
+    //socket.broadcast.emit('serverToBotkit', data)
+    socket.emit('serverToBotkit', data)
   })
 
   socket.on('botkitToServer', function(data){
     console.log('botkitToServer', data)
-    socket.broadcast.emit('serverToLogin', data)
+    //socket.broadcast.emit('serverToLogin', data)
+    socket.emit('serverToLogin', data)
   })
 })
 http.listen(3333, function(){

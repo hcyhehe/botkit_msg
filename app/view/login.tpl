@@ -20,7 +20,6 @@
     <script src="/public/js/strophe.js"></script>
     <script src="/public/js/strophe.flxhr.js"></script>
     <script src="/public/js/socket.io.js"></script>
-    <script src="/public/js/botkit.js"></script>
 </head>
 
 <body>
