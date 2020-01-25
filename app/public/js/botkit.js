@@ -6,10 +6,6 @@ var socketIO = io('http://localhost:3333')
 socketIO.on('connect', function(){
     console.log('botkit.js socket.io connected!')
 })
-socketIO.on('serverToBotkit', function(data){
-    console.log('receive serverToBotkit', data)
-    Botkit.send(data)  //发送开局快捷语言
-})
 socketIO.on('disconnect', function(){
     console.log('botkit.js socket.io disconnected!')
 })

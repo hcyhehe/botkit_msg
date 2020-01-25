@@ -1,4 +1,20 @@
-var socketIO = io('http://localhost:3333')
+let sktio_url
+let ws_url
+if(!location.host){
+    ws_url = 'ws://localhost:3000'
+    sktio_url = 'ws://localhost:3333'
+} else {
+    if(location.host.match(':')){
+        ws_url = 'ws://'+location.host.split(':')[0]+':3000'
+        sktio_url = 'ws://'+location.host.split(':')[0]+':3333'
+    } else {
+        ws_url = 'ws://'+location.host+':3000'
+        sktio_url = 'ws://'+location.host+':3333'
+    }
+    console.log('ws_url:'+ws_url+','+'sktio_url:'+sktio_url)
+}
+
+let socketIO = io(sktio_url)
 socketIO.on('connect', function(){
     console.log('socket.io connected!')
 })
@@ -7,29 +23,15 @@ socketIO.on('serverToLogin', function(data){
                                 <p>${data.text}</p>
                             </div>`)
 })
-socketIO.on('serverToBotkit', function(data){
-    console.log('receive serverToBotkit', data)
-    Botkit.send(data)
-})
 socketIO.on('disconnect', function(){
     console.log('socket.io disconnected!')
 })
 
 
-var converter = new showdown.Converter();
-converter.setOption('openLinksInNewWindow', true);
+let converter = new showdown.Converter()
+converter.setOption('openLinksInNewWindow', true)
 
-let ws_url
-if(!location.host){
-    ws_url = 'ws://localhost:3000'
-} else {
-    if(location.host.match(':')){
-        ws_url = 'ws://'+location.host.split(':')[0]+':3000'
-    } else {
-        ws_url = 'ws://'+location.host+':3000'
-    }
-    console.log('ws_url:'+ws_url)
-}
+
 
 
 const BASE_WEBSOCKET_URL = 'wss://dev.fsll.tech:8443/websocket/';
@@ -229,13 +231,12 @@ var Botkit = {
                 user: that.guid,
                 channel: 'socket',
                 user_profile: that.current_user ? that.current_user : null,
-            });
-            //Botkit.send('菜单')  //发送开局快捷语言
-        });
+            })
+        })
 
         that.socket.addEventListener('error', function (event) {
-            console.error('ERROR', event);
-        });
+            console.error('ERROR', event)
+        })
 
         that.socket.addEventListener('close', function (event) {
             console.log('SOCKET CLOSED!');
@@ -248,7 +249,7 @@ var Botkit = {
             } else {
                 that.message_window.className = 'offline';
             }
-        });
+        })
 
         // Listen for messages 这里监听服务端接收数据
         that.socket.addEventListener('message', function (event) {
@@ -454,12 +455,15 @@ var Botkit = {
 
         return that;
     }
-};
+}
+
+// (function (){
+//     Botkit.boot()
+// })()
+Botkit.boot()
 
 
-(function (){
-    Botkit.boot()
-})()
+
 
 
 
@@ -555,10 +559,9 @@ function onConnect(status, connection) {
                     maType: 6,
                     msgType: 1,
                     id: UUID
-                }).t(content).up()
-                    .c('active', {
-                        xmlns: 'http://jabber.org/protocol/chatstates'
-                    }));
+                }).t(content).up().c('active', {
+                    xmlns: 'http://jabber.org/protocol/chatstates'
+                }))
 
                 // 清空聊天输入框.
                 $('.chat .send-chat').empty();
@@ -569,6 +572,14 @@ function onConnect(status, connection) {
                                                 <p>${content}</p>
                                             </div>`);
                 }
+
+                Botkit.send(content)  //将消息发至服务端的botkit处理
+                //有member样式，则为对方发出
+                // $('.show-msg').append(`<div class="show-msg-item member">
+                //                             <p>${res}</p>
+                //                         </div>`)
+
+
                 // 滚动条保持在底部.
                 keepScrollToBottom('.show-msg');
             });
@@ -845,7 +856,6 @@ function onConnect(status, connection) {
                 console.log('接收方接收到的消息：'+res)
 
                 // 追加对方发送的消息.（接收方）
-                socketIO.emit('loginToServer', res)  //将消息发至服务端，让botkit处理
                 $('.show-msg').append(`<div class="show-msg-item member">
                                             <p>${res}</p>
                                         </div>`);
@@ -923,7 +933,8 @@ function autoLogin(user, pwd) {
                 // username: user + '@' + domain
                 // password: 用户输入密码从后台获取密钥.
                 connection.connect(`${user}@dev.fsll.tech`, data.data, status => {
-                    onConnect(status, connection);
+                    console.log('登录状态', status)
+                    onConnect(status, connection);  //这里调用onConnect函数
                 });
             }
         }

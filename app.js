@@ -15,12 +15,6 @@ const io = require('socket.io')(http)
 
 io.on('connection', function(socket){
   console.log('socket.io connected')
-  socket.on('loginToServer', function(data) {
-    console.log('loginToServer', data)
-    //socket.broadcast.emit('serverToBotkit', data)
-    socket.emit('serverToBotkit', data)
-  })
-
   socket.on('botkitToServer', function(data){
     console.log('botkitToServer', data)
     //socket.broadcast.emit('serverToLogin', data)
