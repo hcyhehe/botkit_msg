@@ -7,7 +7,7 @@ module.exports = app => {
     //查所有教师的课程
     app.bkController.hears(new RegExp('查询所有课程'), 'message', async(bot, message) => {
         let dbs = await app.db.get('lesson').value()
-        console.log('dbs', dbs)
+        //console.log('dbs', dbs)
         let str = ''
         for(let i=0;i<dbs.length;i++){
             str += i+1 + '.' + dbs[i].teacher + ':' + dbs[i].name + ',' + dbs[i].weekday + ',' + dbs[i].times + ' ; ' 
@@ -27,7 +27,7 @@ module.exports = app => {
         console.log('输入：', convo.vars.teacher)
         //let dbs = await app.db.get('lesson').find({teacher:convo.vars.teacher}).value()  //查询单个，返回{}
         let dbs = await app.db.get('lesson').filter({teacher:convo.vars.teacher}).value()  //查询所有，返回[]
-        console.log('dbs', dbs)
+        //console.log('dbs', dbs)
         if(dbs.length>0){
             let str = convo.vars.teacher + ':'
             for(let i=0;i<dbs.length;i++){

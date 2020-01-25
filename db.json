@@ -1,0 +1,78 @@
+{
+  "homework": [
+    {
+      "user": "f9ab0ffa-0e11-a7fe-d7f4-840676853ba9",
+      "channel": "f9ab0ffa-0e11-a7fe-d7f4-840676853ba9",
+      "name": "赵子龙",
+      "ques1": "C",
+      "ques2": "C",
+      "ques3": "B",
+      "confirm": "好"
+    },
+    {
+      "user": "d76b8fb3-f335-021d-e13d-4f0edd2df883",
+      "channel": "d76b8fb3-f335-021d-e13d-4f0edd2df883",
+      "name": "陈茜茜",
+      "ques1": "A",
+      "ques2": "C",
+      "ques3": "B",
+      "confirm": "是的"
+    },
+    {
+      "user": "112cfc64-ccee-0bfe-2f0c-e16c02d62d60",
+      "channel": "112cfc64-ccee-0bfe-2f0c-e16c02d62d60",
+      "name": "赵虎",
+      "ques1": "C",
+      "ques2": "B",
+      "ques3": "A",
+      "confirm": "是的"
+    },
+    {
+      "user": "c89887b9-3dc1-9bf8-70a8-aa244e9d2c1e",
+      "channel": "c89887b9-3dc1-9bf8-70a8-aa244e9d2c1e",
+      "name": "test01",
+      "ques1": "A&nbsp;",
+      "ques2": "B",
+      "ques3": "A",
+      "confirm": "是的"
+    }
+  ],
+  "lesson": [
+    {
+      "teacher": "王国庆",
+      "name": "语文课",
+      "weekday": "星期一",
+      "times": "9:00-10:00"
+    },
+    {
+      "teacher": "李伟民",
+      "name": "数学课",
+      "weekday": "星期一",
+      "times": "14:00-15:00"
+    },
+    {
+      "teacher": "孙道林",
+      "name": "物理",
+      "weekday": "星期三",
+      "times": "14:00-15:00"
+    },
+    {
+      "teacher": "王国庆",
+      "name": "化学",
+      "weekday": "星期一",
+      "times": "10:00-11:00"
+    },
+    {
+      "teacher": "刘龙山",
+      "name": "生物",
+      "weekday": "星期五",
+      "times": "17:00-18:00"
+    },
+    {
+      "teacher": "老王",
+      "name": "政治",
+      "weekday": "星期日",
+      "times": "16:00-17:00"
+    }
+  ]
+}
