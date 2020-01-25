@@ -9,10 +9,10 @@ if(location.host.match('localhost')){
 } else {
     if(location.host.match(':')){
         ws_url = 'ws://'+location.host.split(':')[0]+':3000'
-        sktio_url = 'ws://'+location.host.split(':')[0]+':8088'
+        sktio_url = 'ws://'+location.host.split(':')[0]
     } else {
         ws_url = 'ws://'+location.host+':3000'
-        sktio_url = 'ws://'+location.host+':8088'
+        sktio_url = 'ws://'+location.host
     }
 }
 console.log('ws_url:'+ws_url+','+'sktio_url:'+sktio_url)
