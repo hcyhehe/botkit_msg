@@ -1,6 +1,6 @@
 let sktio_url
 let ws_url
-if(location.host.match('localhost')){
+if(location.host.match('localhost') || location.host.match('127.0.0.1')){
     ws_url = 'ws://localhost:3000'
     sktio_url = 'ws://localhost:8088'
 } else if (!location.host){
@@ -17,7 +17,8 @@ if(location.host.match('localhost')){
 }
 console.log('ws_url:'+ws_url+','+'sktio_url:'+sktio_url)
 
-const socketIO = io(sktio_url, {transports: ['polling','websocket']})
+const socketIO = io.connect(sktio_url)
+//const socketIO = io(sktio_url, {transports: ['polling','websocket']})
 //let socketIO = io(sktio_url)
 socketIO.on('connect', function(){
     console.log('socket.io connected!')
