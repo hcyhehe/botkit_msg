@@ -1,18 +1,21 @@
 let sktio_url
 let ws_url
-if(!location.host){
+if(location.host.match('localhost')){
+    ws_url = 'ws://localhost:3000'
+    sktio_url = 'ws://localhost:3333'
+} else if (!location.host){
     ws_url = 'ws://localhost:3000'
     sktio_url = 'ws://localhost:3333'
 } else {
     if(location.host.match(':')){
         ws_url = 'ws://'+location.host.split(':')[0]+':3000'
-        sktio_url = 'ws://'+location.host.split(':')[0]+':3333'
+        sktio_url = 'ws://'+location.host.split(':')[0]
     } else {
         ws_url = 'ws://'+location.host+':3000'
-        sktio_url = 'ws://'+location.host+':3333'
+        sktio_url = 'ws://'+location.host
     }
-    console.log('ws_url:'+ws_url+','+'sktio_url:'+sktio_url)
 }
+console.log('ws_url:'+ws_url+','+'sktio_url:'+sktio_url)
 
 let socketIO = io(sktio_url)
 socketIO.on('connect', function(){
