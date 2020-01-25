@@ -125,6 +125,7 @@ module.exports = app => {
 
     app.bkController.hears(new RegExp('查作业'), 'message', async(bot, message) => {
         let dbs = await app.db.get('homework').value()  //查询表名为homework的所有数据
+        console.log('dbs', dbs)
         let str = ''
         for(let i=0;i<dbs.length;i++){
             str += i+1 + '.' + dbs[i].name + ':' + dbs[i].ques1 + ',' + dbs[i].ques2 + ',' + dbs[i].ques3 + ' ; ' 
