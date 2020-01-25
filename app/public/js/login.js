@@ -2,10 +2,10 @@ let sktio_url
 let ws_url
 if(location.host.match('localhost')){
     ws_url = 'ws://localhost:3000'
-    sktio_url = 'ws://localhost:3333'
+    sktio_url = 'ws://localhost:8088'
 } else if (!location.host){
     ws_url = 'ws://localhost:3000'
-    sktio_url = 'ws://localhost:3333'
+    sktio_url = 'ws://localhost:8088'
 } else {
     if(location.host.match(':')){
         ws_url = 'ws://'+location.host.split(':')[0]+':3000'

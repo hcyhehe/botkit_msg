@@ -9,21 +9,6 @@ const controller = new Botkit({
   adapter,
   // ...other options
 })
-const app = require('express')()
-const http = require('http').createServer(app)
-const io = require('socket.io')(http)
-
-io.on('connection', function(socket){
-  console.log('socket.io connected')
-  socket.on('botkitToServer', function(data){
-    console.log('botkitToServer', data)
-    //socket.broadcast.emit('serverToLogin', data)
-    socket.emit('serverToLogin', data)
-  })
-})
-http.listen(3333, function(){
-  console.log('socket.io listening on *:3333')
-})
 
 
 class AppBootHook {
@@ -39,8 +24,7 @@ class AppBootHook {
   }
   
   async serverDidReady() {
-    // this.app.listen(8090, ()=>{})
-    console.log('node server已启动，开始接受外部请求')
+    // console.log('node server已启动，开始接受外部请求')
   }
 }
 

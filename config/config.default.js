@@ -26,3 +26,13 @@ exports.cluster = {
         hostname: '0.0.0.0'
     }
 }
+
+exports.io = {
+    init: {},  //passed to engine.io
+    namespace: {
+        '/': {
+            connectionMiddleware: [],
+            packetMiddleware: [],
+        },
+    }
+}
