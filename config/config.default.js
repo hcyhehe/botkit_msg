@@ -22,7 +22,7 @@ exports.middleware = [
 exports.cluster = {
     listen: {
         path: '',
-        port: 8086,
+        port: 8088,
         hostname: '0.0.0.0'
     }
 }
