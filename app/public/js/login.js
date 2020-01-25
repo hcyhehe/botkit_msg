@@ -17,7 +17,7 @@ if(location.host.match('localhost')){
 }
 console.log('ws_url:'+ws_url+','+'sktio_url:'+sktio_url)
 
-const socketIO = io('/')
+const socketIO = io('/', {transports: ['polling','websocket']})
 //let socketIO = io(sktio_url)
 socketIO.on('connect', function(){
     console.log('socket.io connected!')
