@@ -34,5 +34,9 @@ exports.io = {
             connectionMiddleware: [],
             packetMiddleware: [],
         },
+        '/chat': {
+            connectionMiddleware: [ 'connection' ],
+            packetMiddleware: [],
+        },
     }
 }
