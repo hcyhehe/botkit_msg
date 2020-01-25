@@ -1,25 +1,18 @@
-let sktio_url
 let ws_url
 if(location.host.match('localhost') || location.host.match('127.0.0.1')){
     ws_url = 'ws://localhost:3000'
-    sktio_url = 'ws://localhost:8088'
 } else if (!location.host){
     ws_url = 'ws://localhost:3000'
-    sktio_url = 'ws://localhost:8088'
 } else {
     if(location.host.match(':')){
         ws_url = 'ws://'+location.host.split(':')[0]+':3000'
-        sktio_url = 'ws://'+location.host.split(':')[0]+':8088'
     } else {
         ws_url = 'ws://'+location.host+':3000'
-        sktio_url = 'ws://'+location.host+':8088'
     }
 }
-console.log('ws_url:'+ws_url+','+'sktio_url:'+sktio_url)
+console.log('ws_url:'+ws_url)
 
-const socketIO = io.connect(sktio_url)
-//const socketIO = io(sktio_url, {transports: ['polling','websocket']})
-//let socketIO = io(sktio_url)
+const socketIO = io('/', {transports: ['polling','websocket']})
 socketIO.on('connect', function(){
     console.log('socket.io connected!')
 })
