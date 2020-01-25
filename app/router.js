@@ -8,5 +8,6 @@ module.exports = app => {
     router.post('/notek/encrypt', controller.loginCtl.encrypt);
 
     // socket.io
+    io.route('botkitToServer', app.io.controller.server.botkitToServer)
     io.of('/').route('botkitToServer', io.controller.server.botkitToServer)
 }
