@@ -95,14 +95,12 @@ var Botkit = {
                     }
                 }
             };
-
             xmlhttp.open("POST", url, true);
             xmlhttp.setRequestHeader("Content-Type", "application/json");
             xmlhttp.send(JSON.stringify(body));
         });
-
     },
-    send: function (text, e) {
+    send: function (text, e) {  //botkit发送消息
         var that = this;
         if (e) e.preventDefault();
         if (!text) {
@@ -285,14 +283,10 @@ var Botkit = {
         });
     },
     identifyUser: function (user) {
-
         user.timezone_offset = new Date().getTimezoneOffset();
-
         this.guid = user.id;
         Botkit.setCookie('botkit_guid', user.id, 1);
-
         this.current_user = user;
-
         this.deliverMessage({
             type: 'identify',
             user: this.guid,
@@ -350,7 +344,7 @@ var Botkit = {
                 .substring(1);
         }
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-            s4() + '-' + s4() + s4() + s4();
+               s4() + '-' + s4() + s4() + s4();
     },
     boot: function (user) {
         console.log('Booting up');
@@ -388,14 +382,12 @@ var Botkit = {
         });
 
         that.on('message', function (message) {
-            console.log('11111111')
             if (message.goto_link) {
                 window.location = message.goto_link;
             }
         });
 
         that.on('message', function (message) {
-            console.log('222222222')
             that.clearReplies();
             if (message.quick_replies) {
                 var list = document.createElement('ul');
@@ -534,6 +526,7 @@ function onConnect(status, connection) {
                     alert('请选择一个联系人或群');
                     return;
                 }
+                //console.log('contact', contact)
 
                 let params = {
                     isHiddenMsg: '0',
@@ -571,12 +564,9 @@ function onConnect(status, connection) {
                                             </div>`);
                 }
 
-                Botkit.send(content)  //将消息发至服务端的botkit处理
-                //有member样式，则为对方发出
-                // $('.show-msg').append(`<div class="show-msg-item member">
-                //                             <p>${res}</p>
-                //                         </div>`)
-
+                // connection.connect(`${contact[0].user}@dev.fsll.tech`, data.data, status => {
+                // })
+                // Botkit.send(content)  //将消息发至服务端的botkit处理
 
                 // 滚动条保持在底部.
                 keepScrollToBottom('.show-msg');
@@ -749,6 +739,7 @@ function onConnect(status, connection) {
                 }).then(res => {
                     if (res.data.ret) {
                         // 渲染会话列表.
+                        console.log('用户数据', res.data.data)
                         let list = res.data.data,
                             userStr = ``, groupStr = ``, mucList = [], singleList = [];
                         
@@ -842,6 +833,9 @@ function onConnect(status, connection) {
 
             // 接收私聊消息.
             connection.addHandler(msg => {
+                console.log('****************************')
+                console.log(msg)
+                console.log('****************************')
                 let body = msg.getElementsByTagName('body')
                 let message = Strophe.getText(body[0])
                 let res
@@ -857,6 +851,36 @@ function onConnect(status, connection) {
                 $('.show-msg').append(`<div class="show-msg-item member">
                                             <p>${res}</p>
                                         </div>`);
+
+                //获取消息发送方的地址
+                let to
+                if(msg.getAttribute('from').match('/')){
+                    to = msg.getAttribute('from').split('/')[0]
+                } else {
+                    to = msg.getAttribute('from')
+                }
+                let content = '测试发送'
+                let params = {
+                    isHiddenMsg: '0',
+                    from: currentId + '@' + domain,
+                    //from: jid,   //地址后面要加id
+                    type: 'chat',
+                    to: to
+                }
+                console.log('params', params)
+                // 创建一个<message>元素并发送
+                connection.send($msg(params).c('body', {
+                    maType: 6,
+                    msgType: 1,
+                    id: UUID
+                }).t(content).up().c('active', {
+                    xmlns: 'http://jabber.org/protocol/chatstates'
+                }))
+                
+                $('.show-msg').append(`<div class="show-msg-item">
+                                                <p>${content}</p>
+                                            </div>`)
+                
 
                 // 滚动条保持在底部.
                 keepScrollToBottom('.show-msg');
@@ -911,6 +935,9 @@ function onConnect(status, connection) {
     return true;
 };
 
+
+
+
 //  登录.
 function autoLogin(user, pwd) {
     $.ajax({
@@ -925,6 +952,7 @@ function autoLogin(user, pwd) {
         },
         success: data => {
             if (data.success) {
+                //console.log('data.data', data.data)
                 $('#msg').empty();
                 connection = new Strophe.Connection(BASE_WEBSOCKET_URL);
                 // connect params:
