@@ -14,7 +14,7 @@ console.log('ws_url:'+ws_url)
 
 const socketIO = io('/', {transports: ['polling','websocket']})
 socketIO.on('connect', function(){
-    console.log('socket.io connected!')
+    console.log('socket.io connected, id:'+socketIO.id)
 })
 socketIO.on('disconnect', function(){
     console.log('socket.io disconnected!')
@@ -854,7 +854,9 @@ function onConnect(status, connection) {
                     } else {
                         to = msg.getAttribute('from')
                     }
-                    socketIO.on('serverToLogin', function(data){  //3.若监听到botkit回传的消息，则将其发送至xmpp服务器
+                    // 监听自身 id 以实现 p2p 通讯
+                    socketIO.on(socketIO.id, data => {  //3.若监听到botkit回传的消息，则将其发送至xmpp服务器
+                        console.log('#receive,', data)
                         let params = {
                             isHiddenMsg: '0',
                             from: currentId + '@' + domain,
