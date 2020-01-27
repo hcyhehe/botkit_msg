@@ -1,7 +1,11 @@
 // 返回聊天中媒体文件的信息(可直接用于渲染).
 function getMediaContent(con) {
-    const TYPE = /type=\"([a-z]*)/gi.exec(con)[1];
-    let res = '', filePath;
+    if(con=='[object Object]'){
+        return con
+    }
+    
+    const TYPE = /type=\"([a-z]*)/gi.exec(con)[1]
+    let res = '', filePath
 
     switch (TYPE) {
         // 图片.

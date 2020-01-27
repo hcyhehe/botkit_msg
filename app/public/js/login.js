@@ -16,11 +16,6 @@ const socketIO = io('/', {transports: ['polling','websocket']})
 socketIO.on('connect', function(){
     console.log('socket.io connected!')
 })
-socketIO.on('serverToLogin', function(data){
-    $('.show-msg').append(`<div class="show-msg-item member">
-                                <p>${data.text}</p>
-                            </div>`)
-})
 socketIO.on('disconnect', function(){
     console.log('socket.io disconnected!')
 })
@@ -29,8 +24,7 @@ socketIO.on('disconnect', function(){
 let converter = new showdown.Converter()
 converter.setOption('openLinksInNewWindow', true)
 
-
-
+let ifBotkitUser = false
 
 const BASE_WEBSOCKET_URL = 'wss://dev.fsll.tech:8443/websocket/';
 
@@ -258,7 +252,7 @@ var Botkit = {
             }
             console.log('strophe listen', message)
             that.trigger(message.type, message)
-            socketIO.emit('botkitToServer', message) //机器人回馈的消息，发送至socket.IO服务端
+            socketIO.emit('botkitToServer', message)  //服务端机器人回馈的消息，然后将其转发至socket.IO服务端
         });
     },
     clearReplies: function () {
@@ -564,10 +558,6 @@ function onConnect(status, connection) {
                                             </div>`);
                 }
 
-                // connection.connect(`${contact[0].user}@dev.fsll.tech`, data.data, status => {
-                // })
-                // Botkit.send(content)  //将消息发至服务端的botkit处理
-
                 // 滚动条保持在底部.
                 keepScrollToBottom('.show-msg');
             });
@@ -833,9 +823,9 @@ function onConnect(status, connection) {
 
             // 接收私聊消息.
             connection.addHandler(msg => {
-                console.log('****************************')
+                console.log('************************************************')
                 console.log(msg)
-                console.log('****************************')
+                console.log('************************************************')
                 let body = msg.getElementsByTagName('body')
                 let message = Strophe.getText(body[0])
                 let res
@@ -852,34 +842,40 @@ function onConnect(status, connection) {
                                             <p>${res}</p>
                                         </div>`);
 
-                //获取消息发送方的地址
-                let to
-                if(msg.getAttribute('from').match('/')){
-                    to = msg.getAttribute('from').split('/')[0]
-                } else {
-                    to = msg.getAttribute('from')
-                }
-                let content = '测试发送'
-                let params = {
-                    isHiddenMsg: '0',
-                    from: currentId + '@' + domain,
-                    //from: jid,   //地址后面要加id
-                    type: 'chat',
-                    to: to
-                }
-                console.log('params', params)
-                // 创建一个<message>元素并发送
-                connection.send($msg(params).c('body', {
-                    maType: 6,
-                    msgType: 1,
-                    id: UUID
-                }).t(content).up().c('active', {
-                    xmlns: 'http://jabber.org/protocol/chatstates'
-                }))
                 
-                $('.show-msg').append(`<div class="show-msg-item">
-                                                <p>${content}</p>
-                                            </div>`)
+                /**
+                 * botkit自动发送消息流程
+                 **/
+                if(ifBotkitUser){  //1.先判断该账号是否为机器人账号
+                    Botkit.send(res)  //2.将接收到的消息发至服务端的botkit处理
+                    let to
+                    if(msg.getAttribute('from').match('/')){
+                        to = msg.getAttribute('from').split('/')[0]
+                    } else {
+                        to = msg.getAttribute('from')
+                    }
+                    socketIO.on('serverToLogin', function(data){  //3.若监听到botkit回传的消息，则将其发送至xmpp服务器
+                        let params = {
+                            isHiddenMsg: '0',
+                            from: currentId + '@' + domain,
+                            type: 'chat',
+                            to: to
+                        }
+                        console.log('params', params)
+                        // 创建一个<message>元素并发送
+                        connection.send($msg(params).c('body', {
+                            maType: 6,
+                            msgType: 1,
+                            id: UUID
+                        }).t(data.text).up().c('active', {
+                            xmlns: 'http://jabber.org/protocol/chatstates'
+                        }))
+                        
+                        $('.show-msg').append(`<div class="show-msg-item">
+                                                        <p>${data.text}</p>
+                                                    </div>`)
+                    })
+                }
                 
 
                 // 滚动条保持在底部.
@@ -952,7 +948,11 @@ function autoLogin(user, pwd) {
         },
         success: data => {
             if (data.success) {
-                //console.log('data.data', data.data)
+                if(user=='test02'){  //指定一个机器人账号
+                    ifBotkitUser = true
+                    console.log(user, ifBotkitUser)
+                }
+                
                 $('#msg').empty();
                 connection = new Strophe.Connection(BASE_WEBSOCKET_URL);
                 // connect params:
