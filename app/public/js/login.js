@@ -241,7 +241,7 @@ var Botkit = {
             }
         })
 
-        // Listen for messages 这里监听服务端接收数据
+        // Listen for messages 这里监听服务端接收数据（暂时不用这里来监听，防止数据重复）
         that.socket.addEventListener('message', function (event) {
             var message = null
             try {
@@ -250,10 +250,11 @@ var Botkit = {
                 that.trigger('socket_error', err)
                 return
             }
+            message.sid = socketIO.id
             console.log('strophe listen', message)
-            that.trigger(message.type, message)
+            // that.trigger(message.type, message)
             socketIO.emit('botkitToServer', message)  //服务端机器人回馈的消息，然后将其转发至socket.IO服务端
-        });
+        })
     },
     clearReplies: function () {
         //this.replies.innerHTML = '';
@@ -847,7 +848,7 @@ function onConnect(status, connection) {
                  * botkit自动发送消息流程
                  **/
                 if(ifBotkitUser){  //1.先判断该账号是否为机器人账号
-                    Botkit.send(res)  //2.将接收到的消息发至服务端的botkit处理
+                    Botkit.send(res)
                     let to
                     if(msg.getAttribute('from').match('/')){
                         to = msg.getAttribute('from').split('/')[0]
@@ -864,18 +865,17 @@ function onConnect(status, connection) {
                             to: to
                         }
                         console.log('params', params)
-                        // 创建一个<message>元素并发送
-                        connection.send($msg(params).c('body', {
+                        connection.send($msg(params).c('body', {  // 创建一个<message>元素并发送
                             maType: 6,
                             msgType: 1,
                             id: UUID
                         }).t(data.text).up().c('active', {
                             xmlns: 'http://jabber.org/protocol/chatstates'
                         }))
-                        
                         $('.show-msg').append(`<div class="show-msg-item">
                                                         <p>${data.text}</p>
                                                     </div>`)
+                        //socketIO.close() //彻底关闭socket
                     })
                 }
                 
@@ -885,7 +885,8 @@ function onConnect(status, connection) {
 
                 // 必须返回true, 否则会导致message流只能接收一次.
                 return true;
-            }, null, 'message', 'chat', null, null);
+            }, null, 'message', 'chat', null, null)
+
 
             // 接收群聊消息.
             connection.addHandler(msg => {
