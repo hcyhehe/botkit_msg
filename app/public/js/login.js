@@ -264,11 +264,23 @@ var Botkit = {
                 that.trigger('socket_error', err)
                 return
             }
-            message.sid = socketIO.id
             console.log('strophe listen', message)
             // that.trigger(message.type, message)
             // socketIO.emit('botkitToServer', message)  //服务端机器人回馈的消息，然后将其转发至socket.IO服务端
-            
+
+            if(ifBotkitUser){
+                connection.send($msg(msgParams).c('body', {  // 创建一个<message>元素并发送
+                    maType: 6,
+                    msgType: 1,
+                    //id: UUID,
+                    id: createUUID()   //这里要用新的id，不然消息不会被服务器收录
+                }).t(message.text).up().c('active', {
+                    xmlns: 'http://jabber.org/protocol/chatstates'
+                }))
+                $('.show-msg').append(`<div class="show-msg-item">
+                                            <p>${message.text}</p>
+                                        </div>`)
+            }
         })
     },
     clearReplies: function () {
@@ -559,7 +571,8 @@ function onConnect(status, connection) {
                 connection.send($msg(params).c('body', {
                     maType: 6,
                     msgType: 1,
-                    id: UUID
+                    //id: UUID,
+                    id: createUUID()  //这里要用新的id，不然消息不会被服务器收录
                 }).t(content).up().c('active', {
                     xmlns: 'http://jabber.org/protocol/chatstates'
                 }))
