@@ -22,11 +22,9 @@ $ npm start
 $ npm stop
 ```
 
-### npm scripts
+### 说明
 
-- Use `npm run lint` to check code style.
-- Use `npm test` to run unit test.
-- Use `npm run autod` to auto detect dependencies upgrade, see [autod](https://www.npmjs.com/package/autod) for more detail.
+- 机器人账号暂时设置为:test02，密码12345678
+- test02在线的时候，才能触发相关的自动回复
+- 关键字：查作业/做作业/查询单个课程/查询所有课程/添加课程
 
-
-[egg]: https://eggjs.org
