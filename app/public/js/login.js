@@ -12,7 +12,20 @@ if(location.host.match('localhost') || location.host.match('127.0.0.1')){
 }
 console.log('ws_url:'+ws_url)
 
-const socketIO = io('/', {transports: ['polling','websocket']})
+
+// let socketIO
+// function openSocketIO(){
+//     socketIO = io('/', {transports: ['polling','websocket']})
+//     socketIO.on('connect', function(){
+//         console.log('socket.io connected, id:'+socketIO.id)
+//     })
+//     socketIO.on('disconnect', function(){
+//         console.log('socket.io disconnected!')
+//     })
+// }
+// openSocketIO()
+
+socketIO = io('/', {transports: ['polling','websocket']})
 socketIO.on('connect', function(){
     console.log('socket.io connected, id:'+socketIO.id)
 })
@@ -20,6 +33,7 @@ socketIO.on('disconnect', function(){
     console.log('socket.io disconnected!')
 })
 
+let msgParams
 
 let converter = new showdown.Converter()
 converter.setOption('openLinksInNewWindow', true)
@@ -241,7 +255,7 @@ var Botkit = {
             }
         })
 
-        // Listen for messages 这里监听服务端接收数据（暂时不用这里来监听，防止数据重复）
+        // Listen for messages 这里监听服务端接收数据
         that.socket.addEventListener('message', function (event) {
             var message = null
             try {
@@ -253,7 +267,8 @@ var Botkit = {
             message.sid = socketIO.id
             console.log('strophe listen', message)
             // that.trigger(message.type, message)
-            socketIO.emit('botkitToServer', message)  //服务端机器人回馈的消息，然后将其转发至socket.IO服务端
+            // socketIO.emit('botkitToServer', message)  //服务端机器人回馈的消息，然后将其转发至socket.IO服务端
+            
         })
     },
     clearReplies: function () {
@@ -848,35 +863,45 @@ function onConnect(status, connection) {
                  * botkit自动发送消息流程
                  **/
                 if(ifBotkitUser){  //1.先判断该账号是否为机器人账号
-                    Botkit.send(res)
                     let to
                     if(msg.getAttribute('from').match('/')){
                         to = msg.getAttribute('from').split('/')[0]
                     } else {
                         to = msg.getAttribute('from')
                     }
+                    msgParams = {
+                        isHiddenMsg: '0',
+                        from: currentId + '@' + domain,
+                        type: 'chat',
+                        to: to
+                    }
+                    Botkit.send(res)
+
+
                     // 监听自身 id 以实现 p2p 通讯
-                    socketIO.on(socketIO.id, data => {  //3.若监听到botkit回传的消息，则将其发送至xmpp服务器
-                        console.log('#receive,', data)
-                        let params = {
-                            isHiddenMsg: '0',
-                            from: currentId + '@' + domain,
-                            type: 'chat',
-                            to: to
-                        }
-                        console.log('params', params)
-                        connection.send($msg(params).c('body', {  // 创建一个<message>元素并发送
-                            maType: 6,
-                            msgType: 1,
-                            id: UUID
-                        }).t(data.text).up().c('active', {
-                            xmlns: 'http://jabber.org/protocol/chatstates'
-                        }))
-                        $('.show-msg').append(`<div class="show-msg-item">
-                                                        <p>${data.text}</p>
-                                                    </div>`)
-                        //socketIO.close() //彻底关闭socket
-                    })
+                    // socketIO.on(socketIO.id, data => {  //3.若监听到botkit回传的消息，则将其发送至xmpp服务器
+                    //     console.log('#receive,', data)
+                    //     let params = {
+                    //         isHiddenMsg: '0',
+                    //         from: currentId + '@' + domain,
+                    //         type: 'chat',
+                    //         to: to
+                    //     }
+                    //     console.log('params', params)
+                    //     connection.send($msg(params).c('body', {  // 创建一个<message>元素并发送
+                    //         maType: 6,
+                    //         msgType: 1,
+                    //         id: UUID
+                    //     }).t(data.text).up().c('active', {
+                    //         xmlns: 'http://jabber.org/protocol/chatstates'
+                    //     }))
+                    //     $('.show-msg').append(`<div class="show-msg-item">
+                    //                                 <p>${data.text}</p>
+                    //                             </div>`)
+                        
+                    //     // socketIO.close() //彻底关闭socket
+                    //     // openSocketIO()
+                    // })
                 }
                 
 
