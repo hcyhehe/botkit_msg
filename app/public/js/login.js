@@ -13,27 +13,15 @@ if(location.host.match('localhost') || location.host.match('127.0.0.1')){
 console.log('ws_url:'+ws_url)
 
 
-// let socketIO
-// function openSocketIO(){
-//     socketIO = io('/', {transports: ['polling','websocket']})
-//     socketIO.on('connect', function(){
-//         console.log('socket.io connected, id:'+socketIO.id)
-//     })
-//     socketIO.on('disconnect', function(){
-//         console.log('socket.io disconnected!')
-//     })
-// }
-// openSocketIO()
+// socketIO = io('/', {transports: ['polling','websocket']})
+// socketIO.on('connect', function(){
+//     console.log('socket.io connected, id:'+socketIO.id)
+// })
+// socketIO.on('disconnect', function(){
+//     console.log('socket.io disconnected!')
+// })
 
-socketIO = io('/', {transports: ['polling','websocket']})
-socketIO.on('connect', function(){
-    console.log('socket.io connected, id:'+socketIO.id)
-})
-socketIO.on('disconnect', function(){
-    console.log('socket.io disconnected!')
-})
-
-let msgParams
+let msgParams  //全局发送消息参数
 
 let converter = new showdown.Converter()
 converter.setOption('openLinksInNewWindow', true)
@@ -266,7 +254,6 @@ var Botkit = {
             }
             console.log('strophe listen', message)
             // that.trigger(message.type, message)
-            // socketIO.emit('botkitToServer', message)  //服务端机器人回馈的消息，然后将其转发至socket.IO服务端
 
             if(ifBotkitUser){
                 connection.send($msg(msgParams).c('body', {  // 创建一个<message>元素并发送
@@ -889,32 +876,6 @@ function onConnect(status, connection) {
                         to: to
                     }
                     Botkit.send(res)
-
-
-                    // 监听自身 id 以实现 p2p 通讯
-                    // socketIO.on(socketIO.id, data => {  //3.若监听到botkit回传的消息，则将其发送至xmpp服务器
-                    //     console.log('#receive,', data)
-                    //     let params = {
-                    //         isHiddenMsg: '0',
-                    //         from: currentId + '@' + domain,
-                    //         type: 'chat',
-                    //         to: to
-                    //     }
-                    //     console.log('params', params)
-                    //     connection.send($msg(params).c('body', {  // 创建一个<message>元素并发送
-                    //         maType: 6,
-                    //         msgType: 1,
-                    //         id: UUID
-                    //     }).t(data.text).up().c('active', {
-                    //         xmlns: 'http://jabber.org/protocol/chatstates'
-                    //     }))
-                    //     $('.show-msg').append(`<div class="show-msg-item">
-                    //                                 <p>${data.text}</p>
-                    //                             </div>`)
-                        
-                    //     // socketIO.close() //彻底关闭socket
-                    //     // openSocketIO()
-                    // })
                 }
                 
 
@@ -989,7 +950,7 @@ function autoLogin(user, pwd) {
         },
         success: data => {
             if (data.success) {
-                if(user=='test02'){  //指定一个机器人账号
+                if(user=='test02'){  //注意这里，指定一个机器人账号，先暂时写死，后续再改进
                     ifBotkitUser = true
                     console.log(user, ifBotkitUser)
                 }
