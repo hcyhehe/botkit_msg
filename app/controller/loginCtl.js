@@ -1,7 +1,9 @@
-const Controller = require('egg').Controller;
+const Controller = require('egg').Controller
+const dayjs = require('dayjs')
+const fs = require('fs')
+const path = require('path')
+const createEncrypt = require('../createEncrypt.js')
 
-const dayjs = require('dayjs');
-const createEncrypt = require('../createEncrypt.js');
 
 class LoginController extends Controller {
     // 渲染模版
@@ -53,6 +55,16 @@ class LoginController extends Controller {
             };
             ctx.status = 200;
         }
+    }
+
+
+    async retjs(){
+        let ctx = this.ctx
+        let url = ctx.request.url
+        let filePath = path.resolve(__dirname, '../') + '/public/js' + url
+        console.log(filePath)
+        ctx.type = 'js'
+        ctx.body = fs.createReadStream(filePath)
     }
 }
 
